@@ -11,6 +11,9 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Game> Games => Set<Game>();
     public DbSet<GameSession> GameSessions => Set<GameSession>();
     public DbSet<Achievement> Achievements => Set<Achievement>();
+    public DbSet<UserAchievement> UserAchievements => Set<UserAchievement>();
+    public DbSet<Models.Thread> Threads => Set<Models.Thread>();
+    public DbSet<Post> Posts => Set<Post>();
     
     protected override void OnModelCreating(ModelBuilder builder)
     {

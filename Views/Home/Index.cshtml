@@ -1,5 +1,4 @@
 ﻿@model ArcadeProject.DTOs.HomeIndexDto
-
 @{
     ViewData["Title"] = "Strona główna";
 }
@@ -10,6 +9,7 @@
     <div class="hero-label">// Witaj na portalu</div>
     <h1>Graj. Rywalizuj.<br><span>Zostaw swój ślad.</span></h1>
     <p>Klasyczne gry przeglądarkowe z globalnym rankingiem, historią rozgrywek i systemem odznak.</p>
+
     <div class="d-flex gap-3 flex-wrap">
         <a asp-controller="Game" asp-action="Index" class="btn-arcade btn-primary-arcade">Przeglądaj gry</a>
         @if (User.Identity is { IsAuthenticated: true })
@@ -21,6 +21,7 @@
             <a asp-controller="Account" asp-action="Register" class="btn-arcade btn-ghost-arcade">Zarejestruj się</a>
         }
     </div>
+
 </section>
 
 <div class="stats-bar">

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true"/>
+    </xsd:schema>
+    <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+    <resheader name="version"><value>2.0</value></resheader>
+    <data name="PanelBackTo" xml:space="preserve">
+        <value>BACK TO GAME SELECT</value>
+    </data>
+    <data name="GameButton" xml:space="preserve">
+        <value>PLAY</value>
+    </data>
+    <data name="GameButtonDesc" xml:space="preserve">
+        <value>Press PLAY or space button to play</value>
+    </data>
+    <data name="GameScore" xml:space="preserve">
+        <value>Score</value>
+    </data>
+    <data name="GameBestScore" xml:space="preserve">
+        <value>Highest score</value>
+    </data>
+    <data name="GameTime" xml:space="preserve">
+        <value>Time</value>
+    </data>
+    <data name="StatsBestScore" xml:space="preserve">
+        <value>YOUR HIGH SCORE</value>
+    </data>
+    <data name="StatsNoPlayed" xml:space="preserve">
+        <value>Haven't played yet</value>
+    </data>
+    <data name="StatsLogin" xml:space="preserve">
+        <value>Login</value>
+    </data>
+    <data name="StatsLoginDesc" xml:space="preserve">
+        <value>to save your score and appear in the rankings.</value>
+    </data>
+    <data name="LeaderboardTop" xml:space="preserve">
+        <value>TOP 10 — </value>
+    </data>
+    <data name="LeaderboardScoreLack" xml:space="preserve">
+        <value>Lack of scores — aim for the gold! 🏆</value>
+    </data>
+</root>

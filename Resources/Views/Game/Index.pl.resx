@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true"/>
+    </xsd:schema>
+    <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+    <resheader name="version"><value>2.0</value></resheader>
+    <data name="PanelMain" xml:space="preserve">
+        <value>WSZYSTKIE GRY</value>
+    </data>
+    <data name="PanelSecond" xml:space="preserve">
+        <value>Wybierz grę i zostaw swój ślad w rankingu.</value>
+    </data>
+    <data name="TilePlayed" xml:space="preserve">
+        <value>Grano: </value>
+    </data>
+    <data name="TileButton" xml:space="preserve">
+        <value>GRAJ</value>
+    </data>
+    <data name="AdminInfo" xml:space="preserve">
+        <value>NIEAKTYWNA</value>
+    </data>
+    <data name="NoGames" xml:space="preserve">
+        <value>Brak dostępnych gier.</value>
+    </data>
+</root>

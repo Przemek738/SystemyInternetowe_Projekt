@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true"/>
+    </xsd:schema>
+    <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+    <resheader name="version"><value>2.0</value></resheader>
+    <data name="PanelBackTo" xml:space="preserve">
+        <value>WRÓĆ DO LISTY GIER</value>
+    </data>
+    <data name="GameButton" xml:space="preserve">
+        <value>START</value>
+    </data>
+    <data name="GameButtonDesc" xml:space="preserve">
+        <value>Naciśnij START lub spację żeby zacząć</value>
+    </data>
+    <data name="GameScore" xml:space="preserve">
+        <value>Wynik</value>
+    </data>
+    <data name="GameBestScore" xml:space="preserve">
+        <value>Twój rekord</value>
+    </data>
+    <data name="GameTime" xml:space="preserve">
+        <value>Czas</value>
+    </data>
+    <data name="StatsBestScore" xml:space="preserve">
+        <value>TWÓJ REKORD</value>
+    </data>
+    <data name="StatsNoPlayed" xml:space="preserve">
+        <value>Jeszcze nie grałeś</value>
+    </data>
+    <data name="StatsLogin" xml:space="preserve">
+        <value>Zaloguj się</value>
+    </data>
+    <data name="StatsLoginDesc" xml:space="preserve">
+        <value>żeby zapisywać wyniki i pojawiać się w rankingu.</value>
+    </data>
+    <data name="LeaderboardTop" xml:space="preserve">
+        <value>TOP 10 — </value>
+    </data>
+    <data name="LeaderboardScoreLack" xml:space="preserve">
+        <value>Brak wyników — bądź pierwszy! 🏆</value>
+    </data>
+</root>

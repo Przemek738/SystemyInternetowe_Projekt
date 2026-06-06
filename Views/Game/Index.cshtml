@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<ArcadeProject.DTOs.GameDto>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Loc
 @{
     ViewData["Title"] = "Gry";
 }
@@ -8,8 +10,8 @@
 }
 
 <div class="games-header">
-    <h1>WSZYSTKIE GRY</h1>
-    <p>Wybierz grę i zostaw swój ślad w rankingu.</p>
+    <h1>@Loc["PanelMain"]</h1>
+    <p>@Loc["PanelSecond"]</p>
 </div>
 
 @if (Model.Any())
@@ -38,13 +40,13 @@
                     @if (!game.IsActive)
                     {
                         <div class="game-adminview">
-                            ⚠ NIEAKTYWNA
+                            ⚠ @Loc["AdminInfo"]
                         </div>
                     }
                     <div class="game-desc">@game.Description</div>
                     <div class="game-meta">
-                        <div class="game-plays">Grano: <span>@game.TotalSessions</span>×</div>
-                        <div class="play-btn">GRAJ &gt;</div>
+                        <div class="game-plays">@Loc["TilePlayed"] <span>@game.TotalSessions</span>×</div>
+                        <div class="play-btn">@Loc["TileButton"] &gt;</div>
                     </div>
                 </div>
             </a>
@@ -55,6 +57,6 @@ else
 {
     <div style="text-align:center; padding:4rem; color:var(--ap-muted)">
         <div style="font-size:3rem; margin-bottom:1rem">🕹️</div>
-        <p>Brak dostępnych gier.</p>
+        <p>@Loc["NoGames"]</p>
     </div>
 }

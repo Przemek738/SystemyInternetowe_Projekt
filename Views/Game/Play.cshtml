@@ -1,4 +1,6 @@
 ﻿@model ArcadeProject.DTOs.GamePlayDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Loc
 @{
     ViewData["Title"] = Model.Title;
     var jsGame  = $"~/js/games/{Model.Slug}.js";
@@ -13,7 +15,7 @@
 <div class="game-page">
     
     <div class="game-header">
-        <a class="game-header-back" asp-controller="Game" asp-action="Index">&lt; WRÓĆ DO LISTY GIER</a>
+        <a class="game-header-back" asp-controller="Game" asp-action="Index">&lt; @Loc["PanelBackTo"]</a>
         <h1>@Model.Title.ToUpper()</h1>
         @if (!string.IsNullOrEmpty(Model.Description))
         {
@@ -30,8 +32,8 @@
             
             <div id="gameMenu" class="game-menu">
                 <h2 class="menu-title">@Model.Title.ToUpper()</h2>
-                <p class="menu-sub" id="menuSub">Naciśnij START lub spację żeby zacząć</p>
-                <button class="btn-menu-start" id="btnStart">START</button>
+                <p class="menu-sub" id="menuSub">@Loc["GameButtonDesc"]</p>
+                <button class="btn-menu-start" id="btnStart">@Loc["GameButton"]</button>
             </div>
 
         </div>
@@ -39,15 +41,15 @@
         <div class="game-statusbar">
             <div class="game-stat">
                 <span class="game-stat-value" id="statScore">0</span>
-                <span class="game-stat-label">Wynik</span>
+                <span class="game-stat-label">@Loc["GameScore"]</span>
             </div>
             <div class="game-stat">
                 <span class="game-stat-value" id="statBest">@(Model.PersonalBest?.ToString() ?? "-")</span>
-                <span class="game-stat-label">Twój rekord</span>
+                <span class="game-stat-label">@Loc["GameBestScore"]</span>
             </div>
             <div class="game-stat">
                 <span class="game-stat-value" id="statTime">0s</span>
-                <span class="game-stat-label">Czas</span>
+                <span class="game-stat-label">@Loc["GameTime"]</span>
             </div>
             <span class="save-status" id="saveStatus"></span>
         </div>
@@ -58,13 +60,13 @@
         @if (Model.IsLoggedIn)
         {
             <div class="sidebar-card">
-                <div class="sidebar-card-header">TWÓJ REKORD</div>
+                <div class="sidebar-card-header">@Loc["StatsBestScore"]</div>
                 <div class="personal-best">
                     <span class="personal-best-value">
                         @(Model.PersonalBest.HasValue ? Model.PersonalBest.Value.ToString("N0") : "—")
                     </span>
                     <div class="personal-best-label">
-                        @(Model.PersonalBest.HasValue ? "pkt" : "Jeszcze nie grałeś")
+                        @(Model.PersonalBest.HasValue ? "pkt" : Loc["StatsNoPlayed"])
                     </div>
                 </div>
             </div>
@@ -74,15 +76,15 @@
             <div class="sidebar-card">
                 <div class="sidebar-card-body">
                     <div class="login-nudge">
-                        <a asp-controller="Account" asp-action="Login">Zaloguj się</a>,
-                        żeby zapisywać wyniki i pojawiać się w rankingu.
+                        <a asp-controller="Account" asp-action="Login">@Loc["StatsLogin"]</a>,
+                        @Loc["StatsLoginDesc"]
                     </div>
                 </div>
             </div>
         }
 
         <div class="sidebar-card">
-            <div class="sidebar-card-header">TOP 10 — @Model.Title.ToUpper()</div>
+            <div class="sidebar-card-header">@Loc["LeaderboardTop"]@Model.Title.ToUpper()</div>
             <div class="sidebar-card-body" style="padding:.5rem 1rem">
                 @if (Model.TopScores.Any())
                 {
@@ -103,37 +105,8 @@
                 }
                 else
                 {
-                    <div class="empty-lb">Brak wyników — bądź pierwszy! 🏆</div>
+                    <div class="empty-lb">@Loc["LeaderboardScoreLack"]</div>
                 }
-            </div>
-        </div>
-
-        <div class="sidebar-card">
-            <div class="sidebar-card-header">STEROWANIE</div>
-            <div class="sidebar-card-body">
-                <ul class="controls-list">
-                    @if (Model.Slug == "snake")
-                    {
-                        <li><span class="key">↑ ↓ ← →</span> Kierunek</li>
-                        <li><span class="key">W A S D</span> Kierunek</li>
-                    }
-                    else if (Model.Slug == "tetris")
-                    {
-                        <li><span class="key">← →</span> Przesuń</li>
-                        <li><span class="key">↑</span> Obróć</li>
-                        <li><span class="key">↓</span> Szybciej</li>
-                        <li><span class="key">SPACE</span> Upuść</li>
-                    }
-                    else if (Model.Slug == "flappy")
-                    {
-                        <li><span class="key">SPACE</span> Skok</li>
-                        <li><span class="key">Klik</span> Skok</li>
-                    }
-                    else
-                    {
-                        <li>Brak zdefiniowanego sterowania.</li>
-                    }
-                </ul>
             </div>
         </div>
 

@@ -12,11 +12,7 @@
     const context = canvas.getContext('2d');
     canvas.width  = boardWidth;
     canvas.height = boardHeight;
-
-    // ── MAPA — O zamienione na spacje żeby tunele działały ────────────────────
-    // Wiersze 7, 9, 11 mają 'O' po bokach — to puste pola (tunele)
-    // Zamieniamy je na ' ' żeby pacman mógł przez nie przejść
-    // ale zatkamy je ścianami na końcach (upraszczamy — brak tuneli)
+    
     const tileMap = [
         "XXXXXXXXXXXXXXXXXXX",
         "X        X        X",
@@ -25,11 +21,11 @@
         "X XX X XXXXX X XX X",
         "X    X       X    X",
         "XXXX XXXX XXXX XXXX",
-        "X    X       X    X",  // było OOOX — zatkane tunele
+        "X    X       X    X",
         "X XX X XXrXX X XX X",
-        "X       bpo       X",  // było O...O — zatkane tunele
+        "X       bpo       X",
         "X XX X XXXXX X XX X",
-        "X    X       X    X",  // było OOOX — zatkane tunele
+        "X    X       X    X",
         "XXXX X XXXXX X XXXX",
         "X        X        X",
         "X XX XXX X XXX XX X",
@@ -40,9 +36,7 @@
         "X                 X",
         "XXXXXXXXXXXXXXXXXXX"
     ];
-
-    // Specjalne jedzenie (power pellet) — większe, daje możliwość jedzenia duchów
-    // Dodajemy je ręcznie w rogach planszy
+    
     const powerPelletPositions = [
         { r: 3, c: 1 }, { r: 3, c: 17 },
         { r: 17, c: 1 }, { r: 17, c: 17 },
@@ -62,12 +56,10 @@
     let startedAt     = null;
     let timerInterval = null;
     let images        = {};
-
-    // Tryb strachu duchów (po zjedzeniu power pelleta)
+    
     let frightenedTimer = null;
     let frightenedMode  = false;
-
-    // ── KLASA BLOCK ───────────────────────────────────────────────────────────
+    
     class Block {
         constructor(image, x, y, width, height) {
             this.image     = image;
@@ -110,8 +102,7 @@
         return a.x < b.x + b.width  && a.x + a.width  > b.x &&
             a.y < b.y + b.height && a.y + a.height > b.y;
     }
-
-    // ── LOAD MAP ─────────────────────────────────────────────────────────────
+    
     function loadMap(imgs) {
         walls.clear(); foods.clear(); ghosts.clear(); powerPellets.clear();
 
@@ -130,8 +121,7 @@
                 else if (ch === ' ') foods.add(new Block(null, x + 14, y + 14, 4, 4));
             }
         }
-
-        // Dodaj power pellety w rogach (większe kółka)
+        
         for (const pos of powerPelletPositions) {
             const x = pos.c * tileSize + 10;
             const y = pos.r * tileSize + 10;
@@ -148,29 +138,24 @@
             ghost.updateDirection(directions[Math.floor(Math.random() * 4)]);
         }
     }
-
-    // ── DRAW ─────────────────────────────────────────────────────────────────
+    
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Ściany
+        
         for (let wall of walls.values())
             context.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height);
-
-        // Zwykłe jedzenie — białe kropki
+        
         context.fillStyle = 'white';
         for (let food of foods.values())
             context.fillRect(food.x, food.y, food.width, food.height);
-
-        // Power pellety — żółte pulsujące kółka
+        
         context.fillStyle = '#ffff00';
         for (let pp of powerPellets.values()) {
             context.beginPath();
             context.arc(pp.x + pp.width/2, pp.y + pp.height/2, pp.width/2, 0, Math.PI*2);
             context.fill();
         }
-
-        // Duchy — niebieskie w trybie strachu
+        
         for (let ghost of ghosts.values()) {
             if (frightenedMode) {
                 context.fillStyle = '#0000ff';
@@ -179,24 +164,20 @@
                 context.drawImage(ghost.image, ghost.x, ghost.y, ghost.width, ghost.height);
             }
         }
-
-        // Pacman
+        
         context.drawImage(pacman.image, pacman.x, pacman.y, pacman.width, pacman.height);
-
-        // HUD — życia i wynik w lewym górnym rogu z czarnym tłem
+        
         context.fillStyle = 'rgba(0,0,0,.6)';
         context.fillRect(0, 0, boardWidth, 22);
         context.fillStyle = 'white';
         context.font      = '14px sans-serif';
         context.fillText(`♥ ${lives}   ${score} pkt`, 8, 15);
     }
-
-    // ── MOVE ─────────────────────────────────────────────────────────────────
+    
     function move() {
         pacman.x += pacman.velocityX;
         pacman.y += pacman.velocityY;
-
-        // Kolizja pacmana ze ścianami
+        
         for (let wall of walls.values()) {
             if (collision(pacman, wall)) {
                 pacman.x -= pacman.velocityX;
@@ -204,12 +185,10 @@
                 break;
             }
         }
-
-        // Duchy
+        
         for (let ghost of ghosts.values()) {
             if (collision(ghost, pacman)) {
                 if (frightenedMode) {
-                    // Zjedz ducha
                     score += 200;
                     window.arcade.setScore(score);
                     ghost.reset();
@@ -237,8 +216,7 @@
                 }
             }
         }
-
-        // Zwykłe jedzenie
+        
         let eaten = null;
         for (let food of foods.values()) {
             if (collision(pacman, food)) { eaten = food; score += 10; break; }
@@ -247,8 +225,7 @@
             foods.delete(eaten);
             window.arcade.setScore(score);
         }
-
-        // Power pellety
+        
         let eatenPP = null;
         for (let pp of powerPellets.values()) {
             if (collision(pacman, pp)) { eatenPP = pp; break; }
@@ -259,8 +236,7 @@
             window.arcade.setScore(score);
             activateFrightened();
         }
-
-        // Następny poziom
+        
         if (foods.size === 0 && powerPellets.size === 0) {
             loadMap(images);
             resetPositions();
@@ -274,16 +250,14 @@
             frightenedMode = false;
         }, 8000); // 8 sekund
     }
-
-    // ── PĘTLA ─────────────────────────────────────────────────────────────────
+    
     function gameLoop() {
         if (!running) return;
         move();
         draw();
         loopId = setTimeout(gameLoop, 50);
     }
-
-    // ── KONIEC GRY ────────────────────────────────────────────────────────────
+    
     function endGame() {
         running = false;
         if (loopId) clearTimeout(loopId);
@@ -296,8 +270,7 @@
         const duration = Math.floor((Date.now() - startedAt) / 1000);
         setTimeout(() => window.arcade.gameOver(score, duration), 400);
     }
-
-    // ── STEROWANIE ────────────────────────────────────────────────────────────
+    
     function handleKey(e) {
         if (!running) return;
         const map = {
@@ -314,8 +287,7 @@
     }
 
     document.addEventListener('keyup', handleKey);
-
-    // ── PUBLICZNY START ───────────────────────────────────────────────────────
+    
     window.gameStart = function () {
         if (running) return;
         if (Object.keys(images).length > 0) startGame();
@@ -343,8 +315,7 @@
 
         gameLoop();
     }
-
-    // ── ŁADOWANIE OBRAZKÓW ────────────────────────────────────────────────────
+    
     function loadImages(callback) {
         const sources = {
             wall:'wall.png', blueGhost:'blueGhost.png', orangeGhost:'orangeGhost.png',
@@ -363,8 +334,7 @@
             imgs[key]    = img;
         }
     }
-
-    // Inicjalny render
+    
     loadImages(imgs => { images = imgs; loadMap(images); draw(); });
 
 }());

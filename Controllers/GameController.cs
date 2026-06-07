@@ -75,7 +75,7 @@ public class GameController : Controller
                 .Take(10)
                 .Select(s => new LeaderboardEntryDto
                 {
-                    Rank     = 0,           // nadajemy poniżej
+                    Rank     = 0,
                     Username = s.User.UserName ?? "Anonim",
                     Score    = s.Score,
                     PlayedAt = s.PlayedAt

@@ -21,8 +21,10 @@ RUN dotnet publish "ArcadeProject.csproj" \
 
 FROM base AS final
 WORKDIR /app
+
+
 COPY --from=publish /app/publish .
 
-RUN mkdir -p /Data
+RUN mkdir -p /Data && chmod 777 /Data
 
 ENTRYPOINT ["dotnet", "ArcadeProject.dll"]

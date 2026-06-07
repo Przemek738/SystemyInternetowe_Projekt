@@ -9,7 +9,10 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
-      - ConnectionStrings__Default=Data Source=/data/arcade.db
+      - ConnectionStrings__DefaultConnection=Data Source=/Data/arcade.db
+      - Seed__AdminUsername=admin
+      - Seed__AdminEmail=admin@arcadeportal.pl
+      - Seed__AdminPassword=Admin123!
 
       - Email__Host=mailpit
       - Email__Port=1025
@@ -20,7 +23,7 @@
       - Email__UseTls=false
 
     volumes:
-      - db-data:/data
+      - db-data:/Data
 
     depends_on:
       - mailpit

@@ -1,0 +1,605 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Pakiety ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+
+% --- Marginesy ---
+\geometry{
+  a4paper,
+  top=2.5cm,
+  bottom=2.5cm,
+  left=2.5cm,
+  right=2.5cm
+}
+
+% --- Kolory ---
+\definecolor{headerblue}{RGB}{31,73,125}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{codegray}{RGB}{100,100,100}
+
+% --- Nagłówki sekcji ---
+\titleformat{\section}
+  {\large\bfseries\color{headerblue}}
+  {\thesection.}{0.6em}{}[\titlerule]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{headerblue}}
+  {\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries}
+  {\thesubsubsection.}{0.4em}{}
+
+% --- Nagłówek i stopka ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{ArcadePortal --- Dokumentacja projektu}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Hiperłącza ---
+\hypersetup{
+  colorlinks=true,
+  linkcolor=headerblue,
+  urlcolor=headerblue,
+  pdfauthor={Przemysław Pyrzyński, Michał Napora, Maksymilian Wojtkowski},
+  pdftitle={ArcadePortal — Dokumentacja projektu}
+}
+
+% --- Czcionka kodowania (monospace) ---
+\newcommand{\code}[1]{\texttt{\small#1}}
+
+% ============================================================
+\begin{document}
+
+% --- Strona tytułowa ---
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\Huge\bfseries\color{headerblue} ArcadePortal\par}
+  \vspace{0.5cm}
+  {\Large Portal z grami przeglądarkowymi\par}
+  \vspace{0.3cm}
+  {\large Dokumentacja projektowa\par}
+  \vspace{2cm}
+  \rule{\textwidth}{0.4pt}
+  \vspace{0.5cm}
+  {\normalsize Projektowanie i programowanie systemów internetowych I\par}
+  {\normalsize Semestr letni 2024/2025\par}
+  \vspace{0.5cm}
+  \rule{\textwidth}{0.4pt}
+  \vspace{1.5cm}
+  {\large Przemysław Pyrzyński \quad Michał Napora \quad Maksymilian Wojtkowski\par}
+  \vfill
+\end{titlepage}
+
+% --- Spis treści ---
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Opis funkcjonalny systemu}
+
+ArcadePortal to portal z grami przeglądarkowymi umożliwiający użytkownikom rejestrację kont,
+rywalizację w grach zaimplementowanych w JavaScript oraz śledzenie wyników na globalnym rankingu.
+
+\subsection{Moduł gier}
+
+System obsługuje następujące gry przeglądarkowe:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item \textbf{Snake} --- klasyczna gra węża na siatce 24×24, rysowana na elemencie canvas
+  \item \textbf{Tetris} --- zaawansowany Tetris z grawitacją, przyspieszeniem i podglądem następnego klocka
+  \item \textbf{Flappy Bird} --- gra zręcznościowa z fizyką grawitacji i generowaniem rur
+  \item \textbf{Pac-Man} --- klasyczny Pac-Man z duchami, power pelletami i systemem poziomów
+  \item \textbf{Blackjack} --- karciana gra blackjack z pełną mechaniką asów i krupiera
+\end{itemize}
+
+\subsection{System kont użytkowników}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Rejestracja z walidacją danych i emailem powitalnym
+  \item Logowanie przez nazwę użytkownika lub adres email
+  \item Profil użytkownika z historią rozgrywek i statystykami
+  \item Zmiana nazwy użytkownika, avatara i hasła
+  \item Reset hasła przez email z tokenem jednorazowym
+  \item System ról: \textit{Admin} i \textit{User}
+\end{itemize}
+
+\subsection{Ranking i osiągnięcia}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Globalny ranking oparty na sumie najlepszych wyników per gra
+  \item Top 10 per gra z cachowaniem wyników (60 sekund)
+  \item System odznak przyznawanych automatycznie po spełnieniu warunków
+  \item Powiadomienia toast o nowych odznakach po zakończeniu gry
+\end{itemize}
+
+\subsection{Forum}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Wątki ogólne i przypisane do konkretnej gry
+  \item Tworzenie wątków, dodawanie odpowiedzi, edycja i usuwanie własnych postów
+  \item Niezalogowani mogą czytać, zalogowani mogą pisać
+  \item Moderacja przez administratorów
+\end{itemize}
+
+\subsection{Panel administratora}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Zarządzanie użytkownikami: zmiana ról, blokowanie kont
+  \item Zarządzanie grami: dodawanie, edycja, włączanie/wyłączanie
+  \item Zarządzanie odznakami: tworzenie warunków per gra
+  \item Usuwanie postów innych użytkowników
+  \item Statystyki globalne: liczba użytkowników, sesji, wątków, postów
+\end{itemize}
+
+% ============================================================
+\section{Opis technologiczny}
+
+\subsection{Stos technologiczny}
+
+\begin{longtable}{>{\bfseries}p{3cm} p{4cm} p{7cm}}
+  \toprule
+  Warstwa & Technologia & Opis \\
+  \midrule
+  \endhead
+  Backend      & ASP.NET Core 8 MVC         & Framework MVC --- kontrolery, routing, autoryzacja \\[4pt]
+  ORM          & Entity Framework Core 8     & Mapowanie obiektowo-relacyjne, migracje, LINQ \\[4pt]
+  Baza danych  & SQLite                      & Lekka baza plikowa, idealna do projektu zaliczeniowego \\[4pt]
+  Identity     & ASP.NET Core Identity       & System ról, hashowanie haseł, lockout, tokeny \\[4pt]
+  Cache        & IMemoryCache                & Cachowanie rankingów w pamięci serwera \\[4pt]
+  Frontend     & HTML5 + CSS3               & Razor Views, responsywny layout (RWD) \\[4pt]
+  CSS Framework& Bootstrap 5                 & Grid system, komponenty UI \\[4pt]
+  JavaScript   & Vanilla JS (ES6+)           & Logika gier, fetch API, animacje \\[4pt]
+  Gry          & HTML5 Canvas API            & Renderowanie gier: Snake, Tetris, Flappy, Pac-Man \\[4pt]
+  Mailing      & MailKit + SMTP              & Wysyłka maili: rejestracja, reset hasła, odznaki \\[4pt]
+  Lokalizacja  & IStringLocalizer / IViewLocalizer & Obsługa języków PL i EN \\[4pt]
+  Konteneryzacja & Docker + Docker Compose   & Pakowanie aplikacji z Mailpitem \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Architektura aplikacji}
+
+Aplikacja zbudowana jest w architekturze MVC (Model-View-Controller) z dodatkową warstwą serwisów:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item \textbf{Models} --- encje EF Core mapowane na tabele bazy danych
+  \item \textbf{DTOs} --- obiekty transferu danych między kontrolerami a widokami
+  \item \textbf{Controllers} --- obsługa requestów HTTP, walidacja, logika routingu
+  \item \textbf{Services} --- logika biznesowa (\code{AchievementService}, \code{MailKitEmailService})
+  \item \textbf{Views} --- szablony Razor (\code{.cshtml}) z kodem HTML/CSS
+  \item \textbf{Data} --- \code{AppDbContext}, \code{DbSeeder}, migracje EF Core
+\end{itemize}
+
+% ============================================================
+\section{Schemat bazy danych (ERD)}
+
+Baza danych oparta na SQLite zawiera 7 tabel własnych oraz tabele zarządzane przez
+ASP.NET Core Identity (\code{AspNetUsers}, \code{AspNetRoles}, \code{AspNetUserRoles} i inne).
+
+\subsection{Tabele własne}
+
+\subsubsection{Users (rozszerzenie IdentityUser)}
+
+\begin{longtable}{>{\ttfamily}p{3.5cm} p{3cm} p{7cm}}
+  \toprule
+  \normalfont\textbf{Kolumna} & \textbf{Typ} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Id        & PK string   & Klucz główny (GUID generowany przez Identity) \\[3pt]
+  UserName  & string      & Unikalna nazwa użytkownika \\[3pt]
+  Email     & string      & Adres email użytkownika \\[3pt]
+  PasswordHash & string   & Hash hasła (PBKDF2, zarządzany przez Identity) \\[3pt]
+  AvatarUrl & string?     & Opcjonalny URL avatara użytkownika \\[3pt]
+  CreatedAt & DateTime    & Data i czas rejestracji (UTC) \\
+  \bottomrule
+\end{longtable}
+
+\subsubsection{Games}
+
+\begin{longtable}{>{\ttfamily}p{3.5cm} p{3cm} p{7cm}}
+  \toprule
+  \normalfont\textbf{Kolumna} & \textbf{Typ} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Id           & PK int    & Klucz główny \\[3pt]
+  Slug         & string    & Unikalny identyfikator tekstowy (np. \texttt{"snake"}) \\[3pt]
+  Title        & string    & Tytuł gry wyświetlany użytkownikom \\[3pt]
+  Description  & string?   & Opcjonalny opis gry \\[3pt]
+  ThumbnailUrl & string?   & URL miniaturki gry \\[3pt]
+  IsActive     & bool      & Czy gra jest widoczna dla graczy \\[3pt]
+  CreatedAt    & DateTime  & Data dodania gry (UTC) \\
+  \bottomrule
+\end{longtable}
+
+\subsubsection{GameSessions}
+
+\begin{longtable}{>{\ttfamily}p{3.5cm} p{3cm} p{7cm}}
+  \toprule
+  \normalfont\textbf{Kolumna} & \textbf{Typ} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Id              & PK int    & Klucz główny \\[3pt]
+  UserId          & FK string & Referencja do Users \\[3pt]
+  GameId          & FK int    & Referencja do Games \\[3pt]
+  Score           & int       & Wynik zdobyty w tej sesji \\[3pt]
+  DurationSeconds & int       & Czas trwania rozgrywki w sekundach \\[3pt]
+  PlayedAt        & DateTime  & Data i czas rozgrywki (UTC) \\
+  \bottomrule
+\end{longtable}
+
+\subsubsection{Achievements}
+
+\begin{longtable}{>{\ttfamily}p{3.5cm} p{3cm} p{7cm}}
+  \toprule
+  \normalfont\textbf{Kolumna} & \textbf{Typ} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Id          & PK int    & Klucz główny \\[3pt]
+  GameId      & FK int    & Referencja do Games (odznaka należy do gry) \\[3pt]
+  Name        & string    & Nazwa odznaki wyświetlana użytkownikowi \\[3pt]
+  Description & string    & Opis warunku zdobycia odznaki \\[3pt]
+  IconUrl     & string?   & Emoji lub URL ikony odznaki \\[3pt]
+  Condition   & string    & Warunek w formacie \texttt{"score>=100"} lub \texttt{"duration>=60"} \\
+  \bottomrule
+\end{longtable}
+
+\subsubsection{UserAchievements}
+
+\begin{longtable}{>{\ttfamily}p{3.5cm} p{3cm} p{7cm}}
+  \toprule
+  \normalfont\textbf{Kolumna} & \textbf{Typ} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Id            & PK int    & Klucz główny \\[3pt]
+  UserId        & FK string & Referencja do Users \\[3pt]
+  AchievementId & FK int    & Referencja do Achievements \\[3pt]
+  UnlockedAt    & DateTime  & Data i czas odblokowania odznaki (UTC) \\
+  \bottomrule
+\end{longtable}
+
+\subsubsection{Threads}
+
+\begin{longtable}{>{\ttfamily}p{3.5cm} p{3cm} p{7cm}}
+  \toprule
+  \normalfont\textbf{Kolumna} & \textbf{Typ} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Id        & PK int    & Klucz główny \\[3pt]
+  Title     & string    & Tytuł wątku (max 200 znaków) \\[3pt]
+  UserId    & FK string & Autor wątku --- referencja do Users \\[3pt]
+  GameId    & FK int?   & Opcjonalna referencja do Games (null = wątek ogólny) \\[3pt]
+  IsPinned  & bool      & Czy wątek jest przypięty przez moderatora \\[3pt]
+  CreatedAt & DateTime  & Data i czas utworzenia wątku (UTC) \\
+  \bottomrule
+\end{longtable}
+
+\subsubsection{Posts}
+
+\begin{longtable}{>{\ttfamily}p{3.5cm} p{3cm} p{7cm}}
+  \toprule
+  \normalfont\textbf{Kolumna} & \textbf{Typ} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Id        & PK int    & Klucz główny \\[3pt]
+  ThreadId  & FK int    & Referencja do Threads \\[3pt]
+  UserId    & FK string & Autor posta --- referencja do Users \\[3pt]
+  Body      & string    & Treść posta (max 5000 znaków) \\[3pt]
+  CreatedAt & DateTime  & Data i czas utworzenia posta (UTC) \\[3pt]
+  UpdatedAt & DateTime? & Data ostatniej edycji (null = nie edytowano) \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Relacje między tabelami}
+
+\begin{longtable}{p{3.5cm} p{2.5cm} p{3.5cm} p{5cm}}
+  \toprule
+  \textbf{Tabela A} & \textbf{Relacja} & \textbf{Tabela B} & \textbf{Opis} \\
+  \midrule
+  \endhead
+  Users        & 1 : N    & GameSessions    & Jeden użytkownik może mieć wiele sesji gry \\[3pt]
+  Games        & 1 : N    & GameSessions    & Jedna gra może mieć wiele sesji \\[3pt]
+  Users        & 1 : N    & UserAchievements & Jeden użytkownik może mieć wiele odznak \\[3pt]
+  Achievements & 1 : N    & UserAchievements & Jedna odznaka może być odblokowana przez wielu \\[3pt]
+  Games        & 1 : N    & Achievements    & Jedna gra definiuje wiele odznak \\[3pt]
+  Users        & 1 : N    & Threads         & Jeden użytkownik może tworzyć wiele wątków \\[3pt]
+  Games        & 0..1 : N & Threads         & Wątek opcjonalnie przypisany do gry \\[3pt]
+  Threads      & 1 : N    & Posts           & Jeden wątek zawiera wiele postów \\[3pt]
+  Users        & 1 : N    & Posts           & Jeden użytkownik może pisać wiele postów \\
+  \bottomrule
+\end{longtable}
+
+% ============================================================
+\section{Wdrożone zagadnienia kwalifikacyjne}
+
+\begin{longtable}{>{\centering}p{0.7cm} p{3.5cm} p{9.5cm}}
+  \toprule
+  \textbf{\#} & \textbf{Zagadnienie} & \textbf{Implementacja} \\
+  \midrule
+  \endhead
+  1  & Framework MVC           & ASP.NET Core 8 MVC --- kontrolery, modele, widoki Razor \\[3pt]
+  2  & Framework CSS           & Bootstrap 5 --- grid, komponenty; własny system CSS z variables \\[3pt]
+  3  & Baza danych             & SQLite przez Entity Framework Core 8 \\[3pt]
+  4  & Cache                   & IMemoryCache --- cachowanie rankingów i leaderboardów \\[3pt]
+  5  & Dependency manager      & NuGet --- zarządzanie pakietami .NET \\[3pt]
+  6  & HTML                    & Razor Views (\code{.cshtml}) --- szkielet aplikacji \\[3pt]
+  7  & CSS                     & Własne pliki CSS per moduł (auth, forum, game, admin...) \\[3pt]
+  8  & JavaScript              & Logika gier w Vanilla JS, sterowanie, pętla gry \\[3pt]
+  9  & Routing                 & Atrybutowy i konwencjonalny routing MVC, pretty URLs \\[3pt]
+  10 & ORM                     & Entity Framework Core --- DbContext, migracje, LINQ \\[3pt]
+  11 & Uwierzytelnianie        & ASP.NET Core Identity --- role, hasła, lockout, tokeny \\[3pt]
+  12 & Lokalizacja             & IStringLocalizer / IViewLocalizer, pliki .resx, PL/EN \\[3pt]
+  13 & Mailing                 & MailKit + SMTP --- rejestracja, reset hasła, odznaki \\[3pt]
+  14 & Formularze              & Razor Forms z walidacją, AntiForgeryToken \\[3pt]
+  15 & Asynchroniczne interakcje & Fetch API --- zapis wyników, asynchroniczne zapytania \\[3pt]
+  16 & Konsumpcja API          & Własne REST API \code{/api/scores} konsumowane przez JS gier \\[3pt]
+  17 & Publikacja API          & Endpoint \code{/api/scores} (POST) z autoryzacją i CSRF \\[3pt]
+  18 & RWD                     & Bootstrap Grid + media queries, responsywny layout \\[3pt]
+  19 & Logger                  & \code{ILogger<T>} we wszystkich kontrolerach i serwisach \\[3pt]
+  20 & Deployment              & Docker + Docker Compose z Mailpit i volume na bazę \\
+  \bottomrule
+\end{longtable}
+
+% ============================================================
+\section{Instrukcja uruchomienia}
+
+\subsection{Uruchomienie lokalne}
+
+\textbf{Wymagania:} .NET 8 SDK, Mailpit
+
+\begin{enumerate}[leftmargin=1.5cm]
+  \item Sklonuj repozytorium: git clone \url{https://github.com/Przemek738/SystemyInternetowe_Projekt}
+  \item Zainstaluj Mailpit i uruchom: \code{mailpit.exe}
+  \item W katalogu projektu: \code{dotnet ef database update}
+  \item Uruchom aplikację: \code{dotnet run}
+  \item Otwórz przeglądarkę: \url{http://localhost:5000}
+  \item Skrzynka mailowa: \url{http://localhost:8025}
+\end{enumerate}
+
+\subsection{Uruchomienie przez Docker}
+
+\textbf{Wymagania:} Docker Desktop
+
+\begin{enumerate}[leftmargin=1.5cm]
+  \item Sklonuj repozytorium i przejdź do katalogu projektu
+  \item Uruchom: \code{docker compose up --build}
+  \item Aplikacja dostępna pod: \url{http://localhost:8080}
+  \item Skrzynka mailowa: \url{http://localhost:8025}
+\end{enumerate}
+
+Przy pierwszym uruchomieniu seeder automatycznie tworzy role, konto admina, gry z odznakami
+oraz 10 testowych użytkowników z losowymi wynikami.
+
+% ============================================================
+\section{Wnioski projektowe}
+
+\subsection{Osiągnięte cele}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Zrealizowano portal z 5 grami przeglądarkowymi w pełni zintegrowanymi z systemem zapisywania wyników
+  \item Zaimplementowano kompletny system kont z rolami, uwierzytelnianiem i resetem hasła przez email
+  \item Stworzono forum dyskusyjne z moderacją i wątkami przypisanymi do gier
+  \item Skonteneryzowano aplikację przez Docker z pełną izolacją środowiska
+\end{itemize}
+
+\subsection{Napotkane trudności}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Integracja własnego systemu menu gier z jednym widokiem \code{Play.cshtml} wymagała przemyślenia architektury JS
+  \item Konfiguracja ASP.NET Core Identity z własnym modelem User wymagała znajomości cyklu życia tokenów i claims
+\end{itemize}
+
+\subsection{Możliwe rozszerzenia}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Dodanie OAuth2 (logowanie przez Google/GitHub)
+  \item System turniejów i rozgrywek wieloosobowych
+  \item Migracja bazy danych z SQLite na PostgreSQL dla środowiska produkcyjnego
+\end{itemize}
+
+% ============================================================
+\newpage
+\section*{Opis zagadnień kwalifikacyjnych}
+\addcontentsline{toc}{section}{Opis zagadnień kwalifikacyjnych}
+
+W tej sekcji opisujemy szczegółowo każde z 20 zagadnień kwalifikacyjnych --- gdzie jest
+zaimplementowane w projekcie oraz jak można sprawdzić że działa.
+
+\begin{longtable}{>{\centering}p{0.7cm} p{2.8cm} p{4.5cm} p{5.5cm}}
+  \toprule
+  \textbf{\#} & \textbf{Zagadnienie} & \textbf{Gdzie w projekcie} & \textbf{Jak sprawdzić} \\
+  \midrule
+  \endhead
+  1  & Framework MVC
+     & \code{Controllers/*.cs}, \code{Program.cs}, \code{Views/*.cshtml}
+     & Wejdź na \code{/Home}, \code{/Game}, \code{/Forum} --- każda strona to inny kontroler \\[4pt]
+  2  & Framework CSS
+     & \code{Views/Shared/\_Layout.cshtml} (Bootstrap CDN), \code{wwwroot/css/*.css}
+     & Otwórz DevTools → Elements → sprawdź klasy Bootstrap i własne \\[4pt]
+  3  & Baza danych
+     & \code{Data/AppDbContext.cs}, \code{appsettings.json}, \code{arcade.db}
+     & Otwórz plik \code{arcade.db} w DB Viewerze w Visual Studio \\[4pt]
+  4  & Cache
+     & \code{Controllers/GameController.cs} (\code{GetOrCreateAsync}), \code{LeaderboardController.cs}
+     & Zagraj grę, sprawdź wynik --- przez 60s top 10 się nie zmienia \\[4pt]
+  5  & Dependency manager
+     & \code{ArcadeProject.csproj} (\code{<PackageReference>}), \code{Dockerfile}
+     & Otwórz \code{.csproj} --- widać wszystkie paczki NuGet \\[4pt]
+  6  & HTML
+     & \code{Views/**/*.cshtml} --- każdy widok to szablon HTML
+     & Ctrl+U na dowolnej stronie --- widać wygenerowany HTML \\[4pt]
+  7  & CSS
+     & \code{wwwroot/css/gamePlay.css}, \code{auth.css}, \code{forum.css}, \code{admin.css}, \code{leaderboard.css}, \code{profile.css}
+     & DevTools → Network → CSS --- każda strona ładuje swój plik CSS \\[4pt]
+  8  & JavaScript
+     & \code{wwwroot/js/gamePlay.js}, \code{snake.js}, \code{tetris.js}, \code{flappy.js}, \code{pacman.js}, \code{blackjack.js}
+     & DevTools → Sources → \code{wwwroot/js/} \\[4pt]
+  9  & Routing
+     & \code{Program.cs} (\code{MapControllerRoute}), \code{Controllers/GameController.cs} (\code{[HttpPost("/api/scores")]})
+     & Przejdź na \code{/Game/Play/snake} --- \texttt{"snake"} to parametr z URL \\[4pt]
+  10 & ORM
+     & \code{Data/AppDbContext.cs}, \code{Models/*.cs}, \code{Migrations/}
+     & Folder \code{Migrations/} --- każda migracja to zmiana w bazie \\[4pt]
+  11 & Uwierzytelnianie
+     & \code{Controllers/AccountController.cs}, \code{Program.cs} (\code{AddIdentity}), \code{Data/DbSeeder.cs}
+     & Wejdź na \code{/Admin} bez logowania --- przekieruje na \code{/Account/Login} \\[4pt]
+  12 & Lokalizacja
+     & \code{Controllers/CultureController.cs}, \code{Resources/**/*.resx}
+     & Kliknij EN w navbarze --- strona główna zmienia się na angielski \\[4pt]
+  13 & Mailing
+     & \code{Services/MailKitEmailService.cs}, \code{Services/IEmailService.cs}
+     & Zarejestruj konto → sprawdź \url{http://localhost:8025} \\[4pt]
+  14 & Formularze
+     & \code{Views/Account/Register.cshtml}, \code{Views/Forum/Create.cshtml}, \code{DTOs/AccountDtos.cs}
+     & Spróbuj zarejestrować się z pustymi polami --- pojawią się błędy \\[4pt]
+  15 & Async interakcje
+     & \code{wwwroot/js/gamePlay.js} (funkcja \code{saveScore()} z \code{fetch()})
+     & DevTools → Network → zagraj grę → widać POST \code{/api/scores} \\[4pt]
+  16 & Konsumpcja API
+     & \code{wwwroot/js/gamePlay.js} (\code{fetch} POST \code{/api/scores})
+     & Jak wyżej --- JS konsumuje endpoint wystawiony przez kontroler \\[4pt]
+  17 & Publikacja API
+     & \code{Controllers/GameController.cs} (metoda \code{SaveScore}, \code{[HttpPost("/api/scores")]})
+     & DevTools → kliknij request \code{/api/scores} → Preview → JSON \\[4pt]
+  18 & RWD
+     & \code{wwwroot/css/gamePlay.css} (\code{@media max-width: 900px}), \code{\_Layout.cshtml} (\code{navbar-expand-md})
+     & DevTools → Ctrl+Shift+I → symuluj iPhone → sprawdź układ \\[4pt]
+  19 & Logger
+     & \code{Controllers/HomeController.cs}, \code{GameController.cs}, \code{AccountController.cs}, \code{Services/MailKitEmailService.cs}
+     & \code{docker compose logs app -f} → zaloguj się → widać logi \\[4pt]
+  20 & Deployment
+     & \code{Dockerfile}, \code{docker-compose.yml}, \code{.dockerignore}
+     & Na innym komputerze: \code{docker compose up --build} → działa bez .NET \\
+  \bottomrule
+\end{longtable}
+
+% ============================================================
+\newpage
+\section*{Opis szczegółowy każdego zagadnienia}
+\addcontentsline{toc}{section}{Opis szczegółowy każdego zagadnienia}
+
+\paragraph{1. Framework MVC}
+Projekt używa ASP.NET Core 8 MVC. Każda strona to kontroler, który obsługuje żądania i zwraca widok.
+Na przykład \code{HomeController} obsługuje stronę główną, \code{GameController} obsługuje listę gier
+i uruchamianie gry, \code{ForumController} obsługuje forum itd. Routing jest skonfigurowany w \code{Program.cs}.
+
+\paragraph{2. Framework CSS}
+Używamy Bootstrap 5, który jest dołączony przez CDN w pliku \code{\_Layout.cshtml}. Bootstrap obsługuje
+responsywny grid i nawigację. Oprócz Bootstrap mamy własne pliki CSS dla każdego modułu --- osobny plik
+dla strony gry, forum, logowania, panelu admina itd. Dzięki temu style się nie mieszają i każda strona
+ładuje tylko to, czego potrzebuje.
+
+\paragraph{3. Baza danych}
+Używamy SQLite, bo jest prosty w użyciu i nie wymaga osobnego serwera. Baza to jeden plik \code{arcade.db}.
+W Dockerze ten plik jest trzymany na osobnym volume, żeby nie zginął przy rebuild.
+
+\paragraph{4. Cache}
+\code{IMemoryCache} jest wstrzyknięty do \code{GameController} i \code{LeaderboardController}. Ranking
+top 10 per gra jest cachowany przez 60 sekund. Globalny ranking jest cachowany przez 2 minuty. Po zapisaniu
+nowego wyniku cache jest usuwany przez \code{\_cache.Remove()}, żeby przy następnym wejściu dane były świeże.
+
+\paragraph{5. Dependency manager}
+NuGet jest standardowym menedżerem pakietów dla .NET. Wszystkie zależności (EF Core, Identity, MailKit,
+Bootstrap itp.) są zapisane w pliku \code{ArcadeProject.csproj} w sekcji \code{PackageReference}. Komenda
+\code{dotnet restore} pobiera je automatycznie. W Dockerfile restore jest jako osobna warstwa, co przyspiesza buildy.
+
+\paragraph{6. HTML}
+Używamy Razor Views --- pliki \code{.cshtml}, które są szablonami HTML z możliwością wstawiania kodu C\#
+przez składnię \code{@}. Każdy kontroler ma swój folder w \code{Views/}. Plik \code{\_Layout.cshtml} jest
+wspólnym szkieletem dla wszystkich stron --- zawiera navbar, footer i miejsca na sekcje Scripts i Styles.
+
+\paragraph{7. CSS}
+Oprócz Bootstrap mamy własne pliki CSS. Globalny styl jest w \code{site.css}. Każda sekcja ma swój plik ---
+\code{auth.css} dla logowania i rejestracji, \code{forum.css} itd. Używamy CSS Custom Properties (zmienne)
+dla kolorów motywu.
+
+\paragraph{8. JavaScript}
+Logika gier jest napisana w czystym JavaScript (ES6+) bez frameworków. Plik \code{gamePlay.js} to silnik
+strony gry --- obsługuje menu, zapis wyników przez fetch i powiadomienia o odznakach. Każda gra ma swój plik
+(\code{snake.js}, \code{tetris.js} itd.), który implementuje funkcję \code{window.gameStart()} wywoływaną
+przez \code{gamePlay.js} po kliknięciu START. Komunikacja z serwerem odbywa się przez Fetch API.
+
+\paragraph{9. Routing}
+W \code{Program.cs} mamy standardowy routing MVC. Dzięki temu URL \code{/Game/Play/snake} przekazuje
+\texttt{"snake"} jako parametr slug do metody \code{Play()} w \code{GameController}.
+
+\paragraph{10. ORM}
+Entity Framework Core 8 jest naszym ORM. \code{AppDbContext} dziedziczy po \code{IdentityDbContext}
+i definiuje DbSety dla wszystkich encji. Relacje (np. kaskadowe usuwanie) są skonfigurowane w metodzie
+\code{OnModelCreating}. Zapytania piszemy w LINQ. Migracje są w folderze \code{Migrations/}.
+
+\paragraph{11. Uwierzytelnianie}
+ASP.NET Core Identity zarządza użytkownikami i rolami. Mamy dwie role: \textit{Admin} i \textit{User}
+tworzone przez seeder przy starcie. Hasła są hashowane algorytmem PBKDF2. Po 5 nieudanych próbach konto
+jest blokowane na 5 minut. Atrybut \code{[Authorize(Roles="Admin")]} na \code{AdminController} sprawia,
+że tylko admini mają dostęp do panelu. Logowanie działa przez username lub email.
+
+\paragraph{12. Lokalizacja}
+Obsługujemy dwa języki: polski i angielski. W navbarze jest przycisk PL/EN, który wysyła POST do
+\code{CultureController} i zapisuje wybrany język w ciasteczku na rok. Tłumaczenia są w plikach \code{.resx}
+w folderze \code{Resources/} --- osobny plik per kontroler i widok. W widokach używamy
+\code{@inject IViewLocalizer Loc} i \code{@Loc["klucz"]} zamiast hardcodowanych tekstów.
+
+\paragraph{13. Mailing}
+Do wysyłania emaili używamy biblioteki MailKit. Stworzyliśmy interfejs \code{IEmailService} z metodami
+\code{SendWelcomeAsync}, \code{SendPasswordResetAsync} i \code{SendAchievementAsync}. Implementacja
+\code{MailKitEmailService} łączy się przez SMTP do Mailpit (lokalnie i w Dockerze) lub zewnętrznego serwera.
+Jeśli wysyłka się nie uda, błąd jest logowany, ale nie przerywa działania aplikacji (try/catch).
+
+\paragraph{14. Formularze}
+Formularze w aplikacji używają Razor Tag Helpers --- \code{asp-for}, \code{asp-action},
+\code{asp-validation-for}. Walidacja jest definiowana przez atrybuty w klasach DTO, np. \code{[Required]},
+\code{[MinLength(6)]}, \code{[EmailAddress]}. Każdy formularz POST jest zabezpieczony przez
+\code{[ValidateAntiForgeryToken]}, który chroni przed atakami CSRF. Błędy walidacji wracają do widoku
+przez \code{ModelState}.
+
+\paragraph{15. Asynchroniczne interakcje}
+Po zakończeniu gry JavaScript wywołuje \code{fetch()} POST \code{/api/scores} bez przeładowania strony.
+Wysyła JSON z wynikiem i czasem gry. Po odebraniu odpowiedzi aktualizuje pasek statusu (wynik, rekord osobisty)
+i pokazuje powiadomienia o odznakach jako animowane elementy HTML dodawane do body. Wszystko dzieje się bez reload.
+
+\paragraph{16. Konsumpcja API}
+Plik \code{gamePlay.js} konsumuje endpoint \code{/api/scores} przez natywne \code{fetch()} API przeglądarki.
+Wysyła JSON body z \code{gameSlug}, \code{score} i \code{durationSeconds}. Dołącza też token CSRF z ukrytego
+pola formularza w nagłówku \code{RequestVerificationToken}. Obsługuje błędy --- jeśli serwer zwróci 401
+(niezalogowany), wyświetla komunikat bez crashowania gry.
+
+\paragraph{17. Publikacja API}
+Metoda \code{SaveScore()} w \code{GameController} jest wystawiona jako REST endpoint. Ma atrybut
+\code{[HttpPost("/api/scores")]} i \code{[ValidateAntiForgeryToken]}. Sprawdza czy użytkownik jest zalogowany
+(401 jeśli nie) i czy gra istnieje (404 jeśli nie). Zapisuje sesję do bazy, wywołuje \code{AchievementService}
+i zwraca JSON: \code{\{ message, score, newAchievements: [...] \}}.
+
+\paragraph{18. RWD}
+Strona jest responsywna dzięki Bootstrap Grid i własnym media queries. Strona gry używa CSS Grid, który
+automatycznie przełącza się z 2 kolumn (gra + sidebar) na 1 kolumnę poniżej 900px. Nawigacja korzysta
+z \code{navbar-expand-md} Bootstrap --- menu zwija się do hamburgera na telefonach. Siatka kart gier używa
+\code{auto-fill} z \code{minmax(260px, 1fr)}, co automatycznie dobiera liczbę kolumn.
+
+\paragraph{19. Logger}
+Każdy kontroler i serwis ma wstrzyknięty \code{ILogger<T>} przez konstruktor. Logujemy informacje przy
+kluczowych akcjach: załadowanie strony głównej, logowanie, rejestracja, wejście w grę, zapis wyniku,
+przyznanie odznaki. Błędy wysyłki emaila logujemy przez \code{LogError}. W Dockerze logi widać przez
+komendę \code{docker compose logs app -f}.
+
+\paragraph{20. Deployment}
+Aplikacja jest skonteneryzowana w Dockerze. \code{Dockerfile} używa multi-stage build --- najpierw obraz
+z SDK do kompilacji, potem lżejszy obraz \code{aspnet} do uruchomienia. \code{docker-compose.yml} uruchamia
+dwa kontenery: aplikację na porcie 8080 i Mailpit na portach 8025/1025. Baza SQLite jest na volume
+\code{db-data}, który przeżywa rebuildy. Na innym komputerze wystarczy Docker Desktop i komenda
+\code{docker compose up --build}.
+
+\end{document}
